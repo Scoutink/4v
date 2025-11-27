@@ -235,21 +235,39 @@ class CollisionPlugin extends Plugin {
         // Physics objects need a "shadow" mesh for native camera collision to work.
         // Setting mesh.checkCollisions = true has NO EFFECT when mesh has physics body.
         if (options.createCameraCollisionProxy !== false) {  // Allow disabling if needed
-            const collisionProxy = mesh.clone(mesh.name + '_cameraCollision', null);
+            // Get mesh bounding info to create matching collision box
+            const boundingInfo = mesh.getBoundingInfo();
+            const size = boundingInfo.boundingBox.extendSize.scale(2); // extendSize is half-size
+
+            // Create simple invisible box matching mesh dimensions
+            const collisionProxy = BABYLON.MeshBuilder.CreateBox(
+                mesh.name + '_cameraCollision',
+                {
+                    width: size.x,
+                    height: size.y,
+                    depth: size.z
+                },
+                this.scene
+            );
+
+            // Configure as invisible collision proxy
             collisionProxy.isVisible = false;
             collisionProxy.checkCollisions = true;  // Native collision enabled (works because no physics)
             collisionProxy.isPickable = false;  // Don't interfere with interaction
+
+            // Metadata
             collisionProxy.metadata = collisionProxy.metadata || {};
             collisionProxy.metadata.isCollisionProxy = true;
             collisionProxy.metadata.parentMesh = mesh;
 
-            // Parent proxy to physics mesh so they move together automatically
+            // CRITICAL: Parent to physics mesh so they move together automatically
+            // Position at (0,0,0) relative to parent since we sized it to match
             collisionProxy.parent = mesh;
 
             // Store reference for cleanup
             mesh.metadata.collisionProxy = collisionProxy;
 
-            console.log(`[COL.3.1] Created camera collision proxy: ${collisionProxy.name}`);
+            console.log(`[COL.3.1] Created camera collision proxy: ${collisionProxy.name} (${size.x.toFixed(1)}x${size.y.toFixed(1)}x${size.z.toFixed(1)})`);
         }
 
         // [EVT.2] Emit physics body enabled
