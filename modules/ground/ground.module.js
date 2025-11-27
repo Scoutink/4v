@@ -65,13 +65,18 @@ export class GroundModule extends ModuleBase {
         // Create GroundPlugin instance
         this.plugin = new GroundPlugin();
 
+        // CRITICAL: Initialize plugin with scene, events, and config
+        // The plugin needs config to know what ground to create (width, height, type, etc.)
+        await this.plugin.init(
+            this._engine.scene,
+            this._engine.events,
+            { ground: this._config }  // Wrap config in 'ground' key as plugin expects
+        );
+
         // Register with engine
         this._engine.registerPlugin('ground', this.plugin);
 
-        // Initialize plugin (it will be called by engine.start())
-        // No need to call manually here
-
-        console.log('[GroundModule] Plugin wrapped and registered');
+        console.log('[GroundModule] Plugin initialized and registered');
     }
 
     /**

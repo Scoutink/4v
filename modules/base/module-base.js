@@ -141,6 +141,29 @@ export class ModuleBase {
     // ==================== LIFECYCLE HOOKS ====================
 
     /**
+     * Deep merge helper - recursively merges objects
+     * @private
+     * @param {Object} target - Target object
+     * @param {Object} source - Source object
+     * @returns {Object} Merged object
+     */
+    _deepMerge(target, source) {
+        const result = { ...target };
+
+        for (const key in source) {
+            if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                // Recursively merge nested objects
+                result[key] = this._deepMerge(target[key] || {}, source[key]);
+            } else {
+                // Direct assignment for primitives, arrays, and null
+                result[key] = source[key];
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Initialize module
      * Called after dependencies are loaded
      * @param {Object} engine - Babylon engine instance
@@ -160,7 +183,8 @@ export class ModuleBase {
 
             // Store references
             this._engine = engine;
-            this._config = { ...this.getDefaultConfig(), ...config };
+            // Use deep merge to preserve nested config properties
+            this._config = this._deepMerge(this.getDefaultConfig(), config);
 
             // Emit init event
             this.emit('module:init:start', { module: this._name });
