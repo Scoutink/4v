@@ -19,8 +19,9 @@ export class PhysicsController extends UIControllerBase {
         super(physicsModule, '.control-panel');
 
         this.physicsModule = physicsModule;
-        this.scene = physicsModule.scene;
-        this.config = physicsModule.config;
+        // Access scene and config from private properties
+        this.scene = physicsModule._engine.scene;
+        this.config = physicsModule._config;
 
         // UI state
         this.customGravityVisible = false;

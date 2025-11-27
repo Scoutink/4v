@@ -85,6 +85,18 @@ export class GroundModule extends ModuleBase {
     async _onStart() {
         console.log('[GroundModule] Starting...');
 
+        // CRITICAL: Manually start the plugin since it was registered after engine.start()
+        // The engine only calls start() on plugins registered before engine.start() runs
+        if (this.plugin && !this.plugin.started) {
+            try {
+                this.plugin.start();
+                console.log('[GroundModule] Plugin started successfully');
+            } catch (error) {
+                console.error('[GroundModule] Failed to start plugin:', error);
+                throw error;
+            }
+        }
+
         // Plugin is already started by engine
         // Just emit ready event
         this.emit('ground:ready', {
