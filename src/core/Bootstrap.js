@@ -30,6 +30,14 @@ export class Bootstrap {
      */
     async init() {
         try {
+            // PERFORMANCE OPTIMIZATION: Start loading Havok immediately
+            // This allows Havok WASM to load in parallel with other initialization
+            // The physics plugin will use this promise later
+            if (typeof HavokPhysics !== 'undefined') {
+                window.__havokPromise = HavokPhysics();
+                console.log('[Bootstrap] Havok preload started');
+            }
+
             // Global error handlers
             this.setupErrorHandling();
 

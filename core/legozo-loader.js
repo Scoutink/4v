@@ -78,11 +78,13 @@ export class LegozoLoader {
             // 6. Resolve module dependencies
             await this.resolveDependencies();
 
-            // 7. Initialize modules (in dependency order)
-            await this.initializeModules();
-
-            // 8. Start engine (this starts old plugins too)
+            // 7. CRITICAL FIX: Start engine FIRST (this starts all plugins)
+            // Modules depend on plugins being ready, so plugins must start before modules init
             await this.engine.start();
+
+            // 8. Initialize modules (in dependency order)
+            // Now safe because plugins are already started and available
+            await this.initializeModules();
 
             // 9. Start modules
             await this.startModules();
@@ -314,22 +316,65 @@ export class LegozoLoader {
 
     /**
      * Initialize all modules (in dependency order)
+     * Implements graceful degradation - failed modules don't crash the system
      * @returns {Promise<void>}
      */
     async initializeModules() {
         this.updateLoading(60, 'Initializing modules...');
 
+        // Initialize failed modules tracking
+        this.failedModules = this.failedModules || new Map();
+        this.skippedModules = this.skippedModules || new Map();
+
+        const results = {
+            success: [],
+            failed: [],
+            skipped: []
+        };
+
         for (const [name, module] of this.modules.entries()) {
+            // Check if this module depends on a failed module
+            const failedDependencies = (module.dependencies || []).filter(dep =>
+                this.failedModules.has(dep) || this.skippedModules.has(dep)
+            );
+
+            if (failedDependencies.length > 0) {
+                console.warn(`[Legozo] Skipping ${name} (depends on failed: ${failedDependencies.join(', ')})`);
+                this.skippedModules.set(name, failedDependencies);
+                results.skipped.push(name);
+                continue;
+            }
+
             try {
                 await module.init(this.engine, this.config);
-                console.log(`[Legozo] Initialized: ${name}`);
+                results.success.push(name);
+                console.log(`[Legozo] ✓ Initialized: ${name}`);
             } catch (error) {
-                console.error(`[Legozo] Failed to initialize ${name}:`, error);
-                throw error;
+                console.error(`[Legozo] ✗ Failed to initialize ${name}:`, error);
+
+                // Mark as failed but CONTINUE with other modules
+                module._state = 'failed';
+                this.failedModules.set(name, {
+                    error: error.message,
+                    stack: error.stack,
+                    timestamp: new Date().toISOString()
+                });
+                results.failed.push({ name, error: error.message });
+
+                // Don't throw - continue with other modules
             }
         }
 
-        console.log('[Legozo] All modules initialized');
+        // Show warning if any modules failed
+        if (results.failed.length > 0 || results.skipped.length > 0) {
+            this.showModuleFailureWarning(results);
+        }
+
+        console.log('[Legozo] Module initialization complete:', {
+            success: results.success.length,
+            failed: results.failed.length,
+            skipped: results.skipped.length
+        });
     }
 
     /**
@@ -653,6 +698,75 @@ export class LegozoLoader {
         }
 
         console.log(`[Legozo] ${percent}% - ${text}`);
+    }
+
+    /**
+     * Show warning banner for module initialization failures
+     * @param {Object} results - Initialization results {success, failed, skipped}
+     */
+    showModuleFailureWarning(results) {
+        const warningDiv = document.createElement('div');
+        warningDiv.id = 'moduleFailureWarning';
+        warningDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 10000;
+            background: rgba(255, 193, 7, 0.95);
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 8px;
+            max-width: 350px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            line-height: 1.5;
+        `;
+
+        let message = '<strong>⚠️ Some features unavailable</strong><br><br>';
+
+        if (results.failed.length > 0) {
+            message += `<strong>Failed modules:</strong><br>`;
+            message += results.failed.map(f => `• ${f.name}: ${f.error.substring(0, 50)}...`).join('<br>');
+        }
+
+        if (results.skipped.length > 0) {
+            message += `<br><br><strong>Skipped modules:</strong><br>`;
+            message += results.skipped.map(s => `• ${s}`).join('<br>');
+        }
+
+        message += `<br><br><small>The scene will work with reduced functionality.</small>`;
+
+        const dismissBtn = document.createElement('button');
+        dismissBtn.textContent = 'Dismiss';
+        dismissBtn.style.cssText = `
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        `;
+        dismissBtn.onclick = () => warningDiv.remove();
+
+        warningDiv.innerHTML = message;
+        warningDiv.appendChild(dismissBtn);
+
+        document.body.appendChild(warningDiv);
+
+        // Auto-dismiss after 15 seconds
+        setTimeout(() => {
+            if (warningDiv.parentElement) {
+                warningDiv.style.transition = 'opacity 0.5s';
+                warningDiv.style.opacity = '0';
+                setTimeout(() => warningDiv.remove(), 500);
+            }
+        }, 15000);
+
+        console.warn('[Legozo] Module failure warning displayed:', results);
     }
 
     /**

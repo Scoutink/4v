@@ -19,7 +19,7 @@
  * @created 2025-11-25
  */
 
-import ModuleBase from '../../core/ModuleBase.js';
+import ModuleBase from '../base/module-base.js';
 import defaultConfig from './physics.config.js';
 import PhysicsController from './physics.controller.js';
 
@@ -56,7 +56,9 @@ class PhysicsModule extends ModuleBase {
      * @returns {Array<string>} Array of module names this depends on
      */
     getDependencies() {
-        return ['collision', 'gravity'];
+        // No module dependencies - this module accesses plugins directly
+        // collision and gravity are PLUGINS registered in the engine, not modules
+        return [];
     }
 
     /**
@@ -65,6 +67,9 @@ class PhysicsModule extends ModuleBase {
      */
     async _onInit() {
         console.log('[PhysicsModule] Initializing...');
+
+        // Wait for plugins to be available (with timeout protection)
+        await this._waitForPlugins(['collision', 'gravity'], 5000);
 
         // Get plugin instances from engine
         this.collisionPlugin = this.engine.plugins.get('collision');
@@ -111,8 +116,16 @@ class PhysicsModule extends ModuleBase {
         // Initialize UI controller
         this.controller = new PhysicsController(this);
 
-        // CRITICAL: Must call init() to attach event listeners and register actions
-        await this.controller.init();
+        // CRITICAL: Wait for DOM to be ready before initializing controller
+        // Controller needs .control-panel element to attach event listeners
+        try {
+            await this._waitForDOM('.control-panel', 5000);
+            await this.controller.init();
+            console.log('[PhysicsModule] Controller initialized successfully');
+        } catch (error) {
+            console.warn('[PhysicsModule] Controller initialization failed (UI may not be available):', error.message);
+            // Don't throw - physics can still work without UI controls
+        }
 
         // Listen for physics events
         this.setupEventListeners();
@@ -349,6 +362,64 @@ class PhysicsModule extends ModuleBase {
      */
     getGravityPlugin() {
         return this.gravityPlugin;
+    }
+
+    // ==================== PRIVATE METHODS ====================
+
+    /**
+     * Wait for plugins to be available in engine
+     * @private
+     * @param {Array<string>} pluginNames - Plugin names to wait for
+     * @param {number} timeout - Timeout in milliseconds
+     * @returns {Promise<void>}
+     */
+    async _waitForPlugins(pluginNames, timeout = 5000) {
+        const start = Date.now();
+
+        while (Date.now() - start < timeout) {
+            const allAvailable = pluginNames.every(name =>
+                this.engine.plugins.has(name)
+            );
+
+            if (allAvailable) {
+                console.log(`[PhysicsModule] All plugins ready: ${pluginNames.join(', ')}`);
+                return;
+            }
+
+            // Wait 50ms before checking again
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        // Timeout - throw error with helpful message
+        const missing = pluginNames.filter(name => !this.engine.plugins.has(name));
+        throw new Error(
+            `[PhysicsModule] Timeout waiting for plugins. Missing: ${missing.join(', ')}. ` +
+            `Available plugins: ${Array.from(this.engine.plugins.keys()).join(', ')}`
+        );
+    }
+
+    /**
+     * Wait for DOM element to be available
+     * @private
+     * @param {string} selector - CSS selector for the element
+     * @param {number} timeout - Timeout in milliseconds
+     * @returns {Promise<void>}
+     */
+    async _waitForDOM(selector, timeout = 5000) {
+        const start = Date.now();
+
+        while (Date.now() - start < timeout) {
+            const element = document.querySelector(selector);
+            if (element) {
+                console.log(`[PhysicsModule] DOM element ready: ${selector}`);
+                return;
+            }
+
+            // Wait 50ms before checking again
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        throw new Error(`[PhysicsModule] Timeout waiting for DOM element: ${selector}`);
     }
 }
 

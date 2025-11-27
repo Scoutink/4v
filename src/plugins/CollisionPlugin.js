@@ -90,7 +90,12 @@ class CollisionPlugin extends Plugin {
     async initPhysics() {
         try {
             // [PHY.1.1] Load Havok WASM
-            const havok = await HavokPhysics();
+            // PERFORMANCE: Use preloaded promise if available (set by Bootstrap)
+            const havok = window.__havokPromise
+                ? await window.__havokPromise
+                : await HavokPhysics();
+
+            console.log('[COL.1.2] Havok WASM loaded', window.__havokPromise ? '(preloaded)' : '(fresh)');
 
             // [PHY.1.2] Create Havok plugin
             const plugin = new BABYLON.HavokPlugin(true, havok);
