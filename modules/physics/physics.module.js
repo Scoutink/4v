@@ -72,8 +72,8 @@ class PhysicsModule extends ModuleBase {
         await this._waitForPlugins(['collision', 'gravity'], 5000);
 
         // Get plugin instances from engine
-        this.collisionPlugin = this.engine.plugins.get('collision');
-        this.gravityPlugin = this.engine.plugins.get('gravity');
+        this.collisionPlugin = this._engine.plugins.get('collision');
+        this.gravityPlugin = this._engine.plugins.get('gravity');
 
         if (!this.collisionPlugin) {
             throw new Error('[PhysicsModule] CollisionPlugin not found! Ensure "collision" is in modules list.');
@@ -84,10 +84,11 @@ class PhysicsModule extends ModuleBase {
         }
 
         // Store references in scene metadata for easy access
-        this.scene.metadata = this.scene.metadata || {};
-        this.scene.metadata.physicsModule = this;
-        this.scene.metadata.collisionPlugin = this.collisionPlugin;
-        this.scene.metadata.gravityPlugin = this.gravityPlugin;
+        const scene = this._engine.scene;
+        scene.metadata = scene.metadata || {};
+        scene.metadata.physicsModule = this;
+        scene.metadata.collisionPlugin = this.collisionPlugin;
+        scene.metadata.gravityPlugin = this.gravityPlugin;
 
         console.log('[PhysicsModule] Plugins connected');
     }
@@ -107,11 +108,11 @@ class PhysicsModule extends ModuleBase {
         }
 
         // Set initial gravity preset
-        const preset = this.config.gravity.preset || 'earth';
+        const preset = this._config.gravity.preset || 'earth';
         this.setGravityPreset(preset);
 
         // Set collision mode
-        this.collisionMode = this.config.collision.mode || 'hybrid';
+        this.collisionMode = this._config.collision.mode || 'hybrid';
 
         // Initialize UI controller
         this.controller = new PhysicsController(this);
@@ -156,24 +157,24 @@ class PhysicsModule extends ModuleBase {
      */
     setupEventListeners() {
         // Listen for gravity changes
-        this.events.on('gravity:changed', (data) => {
+        this._engine.events.on('gravity:changed', (data) => {
             console.log(`[PhysicsModule] Gravity changed: ${data.preset || 'custom'}`);
             this.currentGravityPreset = data.preset || 'custom';
         });
 
         // Listen for physics enabled/disabled
-        this.events.on('physics:enabled', (data) => {
+        this._engine.events.on('physics:enabled', (data) => {
             console.log('[PhysicsModule] Physics engine enabled');
             this.physicsEnabled = true;
         });
 
-        this.events.on('physics:failed', (data) => {
+        this._engine.events.on('physics:failed', (data) => {
             console.warn('[PhysicsModule] Physics engine failed:', data.error);
             this.physicsEnabled = false;
         });
 
         // Listen for collision events
-        this.events.on('collision:physics:enabled', (data) => {
+        this._engine.events.on('collision:physics:enabled', (data) => {
             this.physicsObjects.set(data.mesh, data.settings);
         });
     }
@@ -187,7 +188,7 @@ class PhysicsModule extends ModuleBase {
     setGravityPreset(preset) {
         if (!this.gravityPlugin) return;
 
-        const presets = this.config.gravity.presets;
+        const presets = this._config.gravity.presets;
         if (presets[preset]) {
             this.gravityPlugin.setPreset(preset);
             this.currentGravityPreset = preset;
@@ -247,7 +248,7 @@ class PhysicsModule extends ModuleBase {
     applyPhysicsPreset(mesh, presetName) {
         if (!mesh) return;
 
-        const preset = this.config.materialPresets[presetName];
+        const preset = this._config.materialPresets[presetName];
         if (!preset) {
             console.warn(`[PhysicsModule] Unknown preset: ${presetName}`);
             return;
@@ -295,7 +296,7 @@ class PhysicsModule extends ModuleBase {
         console.log(`[PhysicsModule] Physics toggle: ${enabled ? 'ON' : 'OFF'}`);
 
         // Emit event
-        this.events.emit('physics:toggled', { enabled });
+        this._engine.events.emit('physics:toggled', { enabled });
     }
 
     /**
@@ -309,7 +310,7 @@ class PhysicsModule extends ModuleBase {
         console.log(`[PhysicsModule] Collision mode: ${mode}`);
 
         // Emit event
-        this.events.emit('collision:mode:changed', { mode });
+        this._engine.events.emit('collision:mode:changed', { mode });
     }
 
     /**
@@ -337,7 +338,7 @@ class PhysicsModule extends ModuleBase {
         // TODO: Implement debug visualization
         // This would use BABYLON.Debug.PhysicsViewer for Havok
 
-        this.events.emit('physics:debug:changed', { showColliders, showForces });
+        this._engine.events.emit('physics:debug:changed', { showColliders, showForces });
     }
 
     /**
@@ -378,7 +379,7 @@ class PhysicsModule extends ModuleBase {
 
         while (Date.now() - start < timeout) {
             const allAvailable = pluginNames.every(name =>
-                this.engine.plugins.has(name)
+                this._engine.plugins.has(name)
             );
 
             if (allAvailable) {
@@ -391,10 +392,10 @@ class PhysicsModule extends ModuleBase {
         }
 
         // Timeout - throw error with helpful message
-        const missing = pluginNames.filter(name => !this.engine.plugins.has(name));
+        const missing = pluginNames.filter(name => !this._engine.plugins.has(name));
         throw new Error(
             `[PhysicsModule] Timeout waiting for plugins. Missing: ${missing.join(', ')}. ` +
-            `Available plugins: ${Array.from(this.engine.plugins.keys()).join(', ')}`
+            `Available plugins: ${Array.from(this._engine.plugins.keys()).join(', ')}`
         );
     }
 
