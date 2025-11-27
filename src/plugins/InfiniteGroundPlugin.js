@@ -325,6 +325,25 @@ class InfiniteGroundPlugin extends Plugin {
         mesh.checkCollisions = this.enableCollision;
         mesh.isPickable = true;
 
+        // [IGR.2.6.1] CRITICAL FIX: Add physics body to chunk for physics objects
+        // Without physics body, physics objects will fall through chunks
+        const collisionPlugin = this.scene.metadata?.collisionPlugin;
+        if (collisionPlugin?.physicsEnabled) {
+            try {
+                // Create static physics body (mass: 0, immovable)
+                collisionPlugin.enablePhysicsBody(mesh, {
+                    mass: 0,  // Static (immovable)
+                    shape: BABYLON.PhysicsShapeType.BOX,
+                    friction: 0.8,
+                    restitution: 0.1,
+                    createCameraCollisionProxy: false  // Chunk already has checkCollisions
+                });
+                console.log(`[IGR.2.6.1] Physics body added to chunk ${chunkX},${chunkZ}`);
+            } catch (error) {
+                console.warn(`[IGR.2.6.1] Failed to add physics to chunk: ${error.message}`);
+            }
+        }
+
         // [IGR.2.7] Configure shadows
         if (this.enableShadows) {
             mesh.receiveShadows = true;

@@ -489,6 +489,31 @@ class GroundPlugin extends Plugin {
         this.ground.rotation.y = y;
         this.ground.rotation.z = z;
 
+        // [CRITICAL FIX] Force physics engine to sync parented objects
+        // When ground rotates, parented physics bodies need explicit sync
+        if (rotateFullScene) {
+            // Compute world matrix to ensure transforms are current
+            this.ground.computeWorldMatrix(true);
+
+            // Force update all parented physics bodies
+            this.ground.getChildMeshes().forEach(childMesh => {
+                if (childMesh.physicsBody) {
+                    // For ANIMATED bodies, we need to explicitly tell physics engine
+                    // to update its transform from the mesh
+                    childMesh.computeWorldMatrix(true);
+
+                    // Sync physics body position/rotation with visual mesh
+                    const body = childMesh.physicsBody;
+                    const worldPos = childMesh.absolutePosition;
+                    const worldRot = childMesh.absoluteRotationQuaternion;
+
+                    body.setTargetTransform(worldPos, worldRot);
+                }
+            });
+
+            console.log(`[GRD.3.1] Synced physics transforms for ${this.ground.getChildMeshes().length} parented objects`);
+        }
+
         // [EVT.2] Emit rotation changed event
         this.events.emit('ground:rotation:changed', {
             rotation: this.rotation,

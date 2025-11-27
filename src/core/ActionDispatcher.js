@@ -492,20 +492,26 @@ export class ActionDispatcher {
      * Setup DOM event delegation
      */
     setupEventDelegation() {
-        // Click events
+        // Click events (buttons, links)
         document.addEventListener('click', (e) => {
             const target = e.target.closest('[data-action]');
             if (!target) return;
+
+            // Skip if this is a checkbox or select (they use 'change' event)
+            if (target.type === 'checkbox' || target.tagName === 'SELECT') return;
 
             const action = target.getAttribute('data-action');
             const value = target.getAttribute('data-value');
             this.dispatch(action, value, target, e);
         });
 
-        // Change events (checkboxes, selects)
+        // Change events (checkboxes, selects) - NOT buttons
         document.addEventListener('change', (e) => {
             const target = e.target;
             if (!target.hasAttribute('data-action')) return;
+
+            // Only handle change events for form controls, not buttons
+            if (target.tagName !== 'INPUT' && target.tagName !== 'SELECT' && target.tagName !== 'TEXTAREA') return;
 
             const action = target.getAttribute('data-action');
             const value = target.type === 'checkbox'

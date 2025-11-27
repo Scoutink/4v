@@ -230,10 +230,27 @@ class CollisionPlugin extends Plugin {
             options: { shape, mass, restitution, friction, ...options }
         });
 
-        // [COL.3] Physics body enabled
-        // [CRITICAL FIX] Ensure Babylon collision is ALSO enabled so camera (which uses checkCollisions)
-        // cannot pass through this physics object.
-        mesh.checkCollisions = true;
+        // [CRITICAL FIX] Create invisible collision proxy for camera collision
+        // Babylon's camera collision (checkCollisions) and Havok physics are separate systems.
+        // Physics objects need a "shadow" mesh for native camera collision to work.
+        // Setting mesh.checkCollisions = true has NO EFFECT when mesh has physics body.
+        if (options.createCameraCollisionProxy !== false) {  // Allow disabling if needed
+            const collisionProxy = mesh.clone(mesh.name + '_cameraCollision', null);
+            collisionProxy.isVisible = false;
+            collisionProxy.checkCollisions = true;  // Native collision enabled (works because no physics)
+            collisionProxy.isPickable = false;  // Don't interfere with interaction
+            collisionProxy.metadata = collisionProxy.metadata || {};
+            collisionProxy.metadata.isCollisionProxy = true;
+            collisionProxy.metadata.parentMesh = mesh;
+
+            // Parent proxy to physics mesh so they move together automatically
+            collisionProxy.parent = mesh;
+
+            // Store reference for cleanup
+            mesh.metadata.collisionProxy = collisionProxy;
+
+            console.log(`[COL.3.1] Created camera collision proxy: ${collisionProxy.name}`);
+        }
 
         // [EVT.2] Emit physics body enabled
         this.events.emit('collision:physics:enabled', {
@@ -364,6 +381,13 @@ class CollisionPlugin extends Plugin {
         // Disable physics body
         if (mesh.physicsBody) {
             mesh.physicsBody.disablePreStep = true;
+        }
+
+        // [FIX] Remove collision proxy if it exists
+        if (mesh.metadata?.collisionProxy) {
+            mesh.metadata.collisionProxy.dispose();
+            mesh.metadata.collisionProxy = null;
+            console.log(`[COL.5.1] Disposed collision proxy for: ${mesh.name}`);
         }
 
         console.log(`[COL.5] Collision disabled: ${mesh.name}`);
