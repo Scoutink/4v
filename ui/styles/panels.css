@@ -1,0 +1,209 @@
+/**
+ * Properties Panel & General Panel Styles
+ * Extracted from phase3-full-demo.html
+ */
+
+/* Scrollbar for control panel */
+.control-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.control-panel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.control-panel::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 4px;
+}
+
+.control-panel::-webkit-scrollbar-thumb:hover {
+    background: #66BB6A;
+}
+
+/* [UI.MODE] View mode - hide edit controls */
+body.view-mode .control-panel {
+    display: none;
+}
+
+body.view-mode .instructions {
+    display: none;
+}
+
+/* [UI.PROPS] Properties Panel */
+.properties-panel {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    padding: 0;
+    border-radius: 8px;
+    width: 280px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(76, 175, 80, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    z-index: 1001;
+    display: none; /* Hidden by default */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.properties-panel.visible {
+    display: block;
+}
+
+body.view-mode .properties-panel {
+    display: none !important;
+}
+
+.properties-header {
+    background: rgba(76, 175, 80, 0.2);
+    padding: 12px 16px;
+    border-bottom: 2px solid rgba(76, 175, 80, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.properties-header h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #81C784;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.properties-body {
+    padding: 16px;
+    overflow-y: auto;
+    max-height: calc(100vh - 150px);
+}
+
+.property-section {
+    margin-bottom: 20px;
+}
+
+.property-section:last-child {
+    margin-bottom: 0;
+}
+
+.property-section-title {
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+/* New grid layout for properties */
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.property-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.property-axis-label {
+    font-size: 10px;
+    color: #81C784;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.property-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 4px;
+    width: 100%;
+}
+
+.property-spinner:focus-within {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.spinner-buttons-top,
+.spinner-buttons-bottom {
+    display: flex;
+    gap: 2px;
+    width: 100%;
+}
+
+.spinner-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #999;
+    padding: 4px;
+    cursor: pointer;
+    font-size: 10px;
+    transition: all 0.15s;
+    border-radius: 2px;
+}
+
+.spinner-btn:hover {
+    background: rgba(76, 175, 80, 0.3);
+    color: #81C784;
+}
+
+.spinner-btn:active {
+    background: rgba(76, 175, 80, 0.5);
+    transform: scale(0.95);
+}
+
+.property-value {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    color: #fff;
+    padding: 6px 4px;
+    font-size: 13px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    text-align: center;
+    outline: none;
+    border-radius: 2px;
+    margin: 2px 0;
+}
+
+.property-value:focus {
+    background: rgba(76, 175, 80, 0.15);
+    color: #81C784;
+}
+
+.object-name-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: #fff;
+    padding: 8px 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    outline: none;
+}
+
+.object-name-input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.property-hint {
+    font-size: 10px;
+    color: #666;
+    margin-top: 4px;
+    font-style: italic;
+}

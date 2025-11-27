@@ -1,0 +1,79 @@
+{
+  "$schema": "./schema.json",
+  "version": "1.0.0",
+  "textures": [
+    {
+      "id": "grass",
+      "name": "Grass",
+      "icon": "🌿",
+      "diffuse": "https://playground.babylonjs.com/textures/grass.png",
+      "normal": "https://playground.babylonjs.com/textures/grassn.png",
+      "tiling": { "u": 4, "v": 4 },
+      "category": "natural"
+    },
+    {
+      "id": "dirt",
+      "name": "Dirt",
+      "icon": "🟤",
+      "diffuse": "https://playground.babylonjs.com/textures/ground.jpg",
+      "tiling": { "u": 4, "v": 4 },
+      "category": "natural"
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "icon": "🪨",
+      "diffuse": "https://playground.babylonjs.com/textures/rock.png",
+      "normal": "https://playground.babylonjs.com/textures/rockn.png",
+      "tiling": { "u": 4, "v": 4 },
+      "category": "natural"
+    },
+    {
+      "id": "sand",
+      "name": "Sand",
+      "icon": "🏖️",
+      "diffuse": "https://playground.babylonjs.com/textures/sand.jpg",
+      "tiling": { "u": 4, "v": 4 },
+      "category": "natural"
+    },
+    {
+      "id": "concrete",
+      "name": "Concrete",
+      "icon": "⬜",
+      "diffuse": "https://playground.babylonjs.com/textures/floor.png",
+      "tiling": { "u": 4, "v": 4 },
+      "category": "construction"
+    },
+    {
+      "id": "wood",
+      "name": "Wood",
+      "icon": "🪵",
+      "diffuse": "https://playground.babylonjs.com/textures/wood.jpg",
+      "tiling": { "u": 4, "v": 4 },
+      "category": "construction"
+    }
+  ],
+  "categories": [
+    {
+      "id": "natural",
+      "name": "Natural",
+      "description": "Grass, dirt, sand, stone textures"
+    },
+    {
+      "id": "construction",
+      "name": "Construction",
+      "description": "Concrete, wood, brick textures"
+    },
+    {
+      "id": "custom",
+      "name": "Custom",
+      "description": "User-uploaded textures"
+    }
+  ],
+  "customTexturePath": "./assets/uploads/textures/",
+  "notes": {
+    "usage": "To add custom textures, place image files in assets/uploads/textures/ and add entries here",
+    "supportedFormats": ["jpg", "png", "jpeg"],
+    "recommended": "Use power-of-2 dimensions (512x512, 1024x1024, 2048x2048) for best performance"
+  }
+}

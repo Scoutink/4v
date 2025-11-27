@@ -1,0 +1,227 @@
+<!-- 
+  Properties Panel Template
+  Shows selected object properties (position, rotation, scale, material)
+  Extracted from phase3-full-demo.html
+-->
+<div class="properties-panel" id="propertiesPanel">
+    <div class="properties-header">
+        <h3>📋 Properties</h3>
+    </div>
+    <div class="properties-body">
+        <!-- Object Name -->
+        <input type="text" class="object-name-input" id="propObjectName" placeholder="Object Name" disabled>
+
+        <!-- Position -->
+        <div class="property-section">
+            <div class="property-section-title">Position</div>
+            <div class="property-grid">
+                <!-- X Position -->
+                <div class="property-control">
+                    <span class="property-axis-label">X</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propPosX" data-step="1">▴</button>
+                            <button class="spinner-btn" data-input="propPosX" data-step="0.1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propPosX" step="0.1" value="0.0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propPosX" data-step="-1">▾</button>
+                            <button class="spinner-btn" data-input="propPosX" data-step="-0.1">▾</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Y Position -->
+                <div class="property-control">
+                    <span class="property-axis-label">Y</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propPosY" data-step="1">▴</button>
+                            <button class="spinner-btn" data-input="propPosY" data-step="0.1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propPosY" step="0.1" value="0.0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propPosY" data-step="-1">▾</button>
+                            <button class="spinner-btn" data-input="propPosY" data-step="-0.1">▾</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Z Position -->
+                <div class="property-control">
+                    <span class="property-axis-label">Z</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propPosZ" data-step="1">▴</button>
+                            <button class="spinner-btn" data-input="propPosZ" data-step="0.1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propPosZ" step="0.1" value="0.0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propPosZ" data-step="-1">▾</button>
+                            <button class="spinner-btn" data-input="propPosZ" data-step="-0.1">▾</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rotation -->
+        <div class="property-section">
+            <div class="property-section-title">Rotation (degrees)</div>
+            <div class="property-grid">
+                <!-- X Rotation -->
+                <div class="property-control">
+                    <span class="property-axis-label">X</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propRotX" data-step="10">▴</button>
+                            <button class="spinner-btn" data-input="propRotX" data-step="1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propRotX" step="1" value="0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propRotX" data-step="-10">▾</button>
+                            <button class="spinner-btn" data-input="propRotX" data-step="-1">▾</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Y Rotation -->
+                <div class="property-control">
+                    <span class="property-axis-label">Y</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propRotY" data-step="10">▴</button>
+                            <button class="spinner-btn" data-input="propRotY" data-step="1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propRotY" step="1" value="0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propRotY" data-step="-10">▾</button>
+                            <button class="spinner-btn" data-input="propRotY" data-step="-1">▾</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Z Rotation -->
+                <div class="property-control">
+                    <span class="property-axis-label">Z</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propRotZ" data-step="10">▴</button>
+                            <button class="spinner-btn" data-input="propRotZ" data-step="1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propRotZ" step="1" value="0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propRotZ" data-step="-10">▾</button>
+                            <button class="spinner-btn" data-input="propRotZ" data-step="-1">▾</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scale -->
+        <div class="property-section">
+            <div class="property-section-title">Scale</div>
+            <div class="property-grid">
+                <!-- X Scale -->
+                <div class="property-control">
+                    <span class="property-axis-label">X</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propScaleX" data-step="1">▴</button>
+                            <button class="spinner-btn" data-input="propScaleX" data-step="0.1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propScaleX" step="0.1" value="1.0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propScaleX" data-step="-1">▾</button>
+                            <button class="spinner-btn" data-input="propScaleX" data-step="-0.1">▾</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Y Scale -->
+                <div class="property-control">
+                    <span class="property-axis-label">Y</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propScaleY" data-step="1">▴</button>
+                            <button class="spinner-btn" data-input="propScaleY" data-step="0.1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propScaleY" step="0.1" value="1.0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propScaleY" data-step="-1">▾</button>
+                            <button class="spinner-btn" data-input="propScaleY" data-step="-0.1">▾</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Z Scale -->
+                <div class="property-control">
+                    <span class="property-axis-label">Z</span>
+                    <div class="property-spinner">
+                        <div class="spinner-buttons-top">
+                            <button class="spinner-btn" data-input="propScaleZ" data-step="1">▴</button>
+                            <button class="spinner-btn" data-input="propScaleZ" data-step="0.1">▴</button>
+                        </div>
+                        <input type="number" class="property-value" id="propScaleZ" step="0.1" value="1.0">
+                        <div class="spinner-buttons-bottom">
+                            <button class="spinner-btn" data-input="propScaleZ" data-step="-1">▾</button>
+                            <button class="spinner-btn" data-input="propScaleZ" data-step="-0.1">▾</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Physics -->
+    <div class="property-section">
+        <div class="property-section-title">⚛️ Physics</div>
+        <div class="property-grid">
+            <!-- Mass -->
+            <div class="property-control">
+                <span class="property-axis-label">Mass</span>
+                <input type="number" class="property-value" id="propMass" step="0.1" value="0.0">
+            </div>
+            <!-- Friction -->
+            <div class="property-control">
+                <span class="property-axis-label">Friction</span>
+                <input type="number" class="property-value" id="propFriction" step="0.1" value="0.5">
+            </div>
+            <!-- Restitution -->
+            <div class="property-control">
+                <span class="property-axis-label">Bounce</span>
+                <input type="number" class="property-value" id="propRestitution" step="0.1" value="0.5">
+            </div>
+        </div>
+
+        <!-- Glue Toggle -->
+        <div class="control-group" style="margin-top: 10px;">
+            <label class="toggle-switch">
+                <input type="checkbox" id="propGlue">
+                <span class="slider round"></span>
+            </label>
+            <span class="control-label">Glue to Ground</span>
+        </div>
+    </div>
+
+    <!-- [FIX #9] Material Gallery - now in Properties Panel -->
+    <div class="property-section">
+        <div class="property-section-title">🎨 Material</div>
+        <div class="properties-material-grid">
+            <button onclick="applyMaterial('wood')">🪵 Wood</button>
+            <button onclick="applyMaterial('metal')">⚙️ Metal</button>
+            <button onclick="applyMaterial('gold')">🥇 Gold</button>
+            <button onclick="applyMaterial('silver')">⚪ Silver</button>
+            <button onclick="applyMaterial('copper')">🟠 Copper</button>
+            <button onclick="applyMaterial('glass')">💎 Glass</button>
+            <button onclick="applyMaterial('plastic')">🔵 Plastic</button>
+            <button onclick="applyMaterial('plasticRed')">🔴 Red Plastic</button>
+            <button onclick="applyMaterial('stone')">🪨 Stone</button>
+            <button onclick="applyMaterial('rubber')">⚫ Rubber</button>
+            <button onclick="applyMaterial('fabric')">🧵 Fabric</button>
+            <button onclick="applyMaterial('ceramic')">⚪ Ceramic</button>
+        </div>
+    </div>
+</div>
+</div>

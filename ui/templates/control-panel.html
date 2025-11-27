@@ -1,0 +1,228 @@
+<!-- 
+  Control Panel Template
+  Edit mode controls for ground, camera, lighting, shadows, sky, materials, objects
+  Extracted from phase3-full-demo.html
+-->
+<div class="control-panel">
+    <h2>⚙️ Edit Controls</h2>
+
+    <!-- [HINT] Usage Instructions -->
+    <div class="control-group"
+        style="background: rgba(76, 175, 80, 0.1); padding: 12px; border-radius: 6px; border-left: 3px solid #4CAF50;">
+        <p style="margin: 0; font-size: 12px; color: #81C784; line-height: 1.6;">
+            💡 <strong>Tip:</strong> Click any object to see its properties panel on the left.
+            Use the colored arrows to move/rotate objects.
+        </p>
+    </div>
+
+    <!-- [GRD] Ground Rotation -->
+    <h3>🌍 Ground Rotation</h3>
+
+    <!-- Rotate Full Scene Option -->
+    <div class="control-group"
+        style="background: rgba(76, 175, 80, 0.1); padding: 12px; border-radius: 6px; margin-bottom: 10px;">
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="rotateFullScene" checked data-action="ground:rotate:fullscene"
+                style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+            <span style="color: #81C784;">🔄 Rotate Full Scene (Recommended)</span>
+        </label>
+        <p style="margin: 8px 0 0 24px; font-size: 11px; color: #999; line-height: 1.4;">
+            When enabled, rotates entire scene including sky and lighting. Prevents flickering.
+        </p>
+    </div>
+
+    <div class="control-group">
+        <label>Quick Presets</label>
+        <button data-action="ground:preset:horizontal">➡️ Horizontal</button>
+        <button data-action="ground:preset:vertical">⬆️ Vertical</button>
+        <button data-action="ground:preset:diagonal45">↗️ Diagonal 45°</button>
+    </div>
+
+    <div class="control-group">
+        <div class="slider-container">
+            <div class="slider-label">
+                <label>X-Axis Tilt</label>
+                <span class="value-display" id="rotationXValue">0°</span>
+            </div>
+            <input type="range" id="rotationX" min="-180" max="180" value="0" data-action="ground:rotate:x">
+        </div>
+
+        <div class="slider-container">
+            <div class="slider-label">
+                <label>Y-Axis Tilt</label>
+                <span class="value-display" id="rotationYValue">0°</span>
+            </div>
+            <input type="range" id="rotationY" min="-180" max="180" value="0" data-action="ground:rotate:y">
+        </div>
+
+        <div class="slider-container">
+            <div class="slider-label">
+                <label>Z-Axis Tilt</label>
+                <span class="value-display" id="rotationZValue">0°</span>
+            </div>
+            <input type="range" id="rotationZ" min="-180" max="180" value="0" data-action="ground:rotate:z">
+        </div>
+    </div>
+
+    <!-- [GRD] Ground Textures -->
+    <h3>🎨 Ground Textures</h3>
+    <div class="control-group">
+        <label>Texture Presets</label>
+        <div class="material-grid">
+            <button onclick="setGroundTexture('grass')">🌿 Grass</button>
+            <button onclick="setGroundTexture('dirt')">🟤 Dirt</button>
+            <button onclick="setGroundTexture('stone')">🪨 Stone</button>
+            <button onclick="setGroundTexture('sand')">🏖️ Sand</button>
+            <button onclick="setGroundTexture('concrete')">⬜ Concrete</button>
+            <button onclick="setGroundTexture('wood')">🪵 Wood</button>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="slider-container">
+            <div class="slider-label">
+                <label>Texture Tiling</label>
+                <span class="value-display" id="textureTiling">10x</span>
+            </div>
+            <input type="range" id="textureTilingSlider" min="1" max="20" value="10"
+                oninput="updateTextureTiling(this.value)">
+        </div>
+    </div>
+
+    <!-- [GRD] Ground Edge Behavior -->
+    <h3>🚧 Ground Edge Behavior</h3>
+    <div class="control-group">
+        <button data-action="ground:edge:stop">🛑 Stop at Edge</button>
+        <button data-action="ground:edge:teleport">🔄 Teleport to Start</button>
+        <button data-action="ground:edge:wrap">🔁 Wrap Around</button>
+        <button data-action="ground:edge:none">🚫 No Limit</button>
+    </div>
+
+    <!-- [IGR] Infinite Terrain -->
+    <h3>♾️ Infinite Terrain</h3>
+    <div class="control-group">
+        <label>Terrain Mode</label>
+        <button data-action="ground:infinite:toggle" id="terrainModeBtn">🌍 Enable Infinite Terrain</button>
+    </div>
+
+    <div class="control-group" id="infiniteControls" style="display: none;">
+        <div class="slider-container">
+            <div class="slider-label">
+                <label>View Distance</label>
+                <span class="value-display" id="viewDistanceValue">3 chunks</span>
+            </div>
+            <input type="range" id="viewDistanceSlider" min="1" max="5" value="3"
+                data-action="ground:infinite:viewdistance">
+        </div>
+
+        <div style="margin-top: 10px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" id="heightVariationCheck" data-action="ground:infinite:height"
+                    style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+                <span>🏔️ Enable Height Variation (Hills)</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- [SKY] Sky System -->
+    <h3>🌤️ Sky & Environment</h3>
+    <div class="control-group">
+        <label>Sky Presets</label>
+        <button onclick="setSkyPreset('day')">☀️ Clear Day</button>
+        <button onclick="setSkyPreset('sunset')">🌅 Sunset</button>
+        <button onclick="setSkyPreset('night')">🌙 Night</button>
+        <button onclick="setSkyPreset('cloudy')">☁️ Cloudy</button>
+        <button onclick="setSkyPreset('space')">🌌 Space</button>
+    </div>
+
+    <!-- [LGT] Lighting -->
+    <h3>💡 Lighting Presets</h3>
+    <div class="control-group">
+        <button onclick="setLightingPreset('day')">☀️ Day</button>
+        <button onclick="setLightingPreset('night')">🌙 Night</button>
+        <button onclick="setLightingPreset('sunset')">🌅 Sunset</button>
+        <button onclick="setLightingPreset('indoor')">🏠 Indoor</button>
+        <button onclick="setLightingPreset('dramatic')">🎭 Dramatic</button>
+        <button onclick="setLightingPreset('studio')">🎬 Studio</button>
+    </div>
+
+    <!-- [SHD] Shadows -->
+    <h3>🌑 Shadow System</h3>
+    <div class="control-group">
+        <label>Quality Level</label>
+        <button onclick="setShadowQuality('low')">⚡ Low</button>
+        <button onclick="setShadowQuality('medium')">⚖️ Medium</button>
+        <button onclick="setShadowQuality('high')">💎 High</button>
+        <button onclick="setShadowQuality('ultra')">🔮 Ultra</button>
+    </div>
+
+    <!-- [PHY] Physics System -->
+    <h3>⚛️ Physics System</h3>
+    <div class="control-group"
+        style="background: rgba(156, 39, 176, 0.1); padding: 12px; border-radius: 6px; border-left: 3px solid #9C27B0;">
+        <p style="margin: 0; font-size: 11px; color: #BA68C8; line-height: 1.6;">
+            ⚡ <strong>Havok Physics:</strong> Collision detection with gravity simulation
+        </p>
+    </div>
+
+    <div class="control-group">
+        <label>Gravity Presets</label>
+        <div class="material-grid">
+            <button data-action="physics:gravity:preset" data-value="earth">🌍 Earth</button>
+            <button data-action="physics:gravity:preset" data-value="moon">🌙 Moon</button>
+            <button data-action="physics:gravity:preset" data-value="mars">🔴 Mars</button>
+            <button data-action="physics:gravity:preset" data-value="zeroG">🚀 Zero-G</button>
+            <button data-action="physics:gravity:preset" data-value="arcade">🎮 Arcade</button>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="cameraCollision" checked data-action="physics:camera:collision"
+                style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+            <span>🛡️ Camera Collision</span>
+        </label>
+    </div>
+
+    <!-- [OBJ] Objects System -->
+    <h3>📦 Objects</h3>
+    <div class="control-group">
+        <label>Create Objects</label>
+        <div class="material-grid">
+            <button data-action="object:add" data-value="box">📦 Box</button>
+            <button data-action="object:add" data-value="sphere">⚪ Sphere</button>
+            <button data-action="object:add" data-value="cylinder">🔘 Cylinder</button>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label>Object Actions</label>
+        <button data-action="object:glue:all" style="background: #4CAF50;">🔗 Glue All to Ground</button>
+        <button data-action="object:clear" style="background: #f44336;">🗑️ Clear All Objects</button>
+    </div>
+
+    <!-- [MAT] Materials -->
+    <!-- [FIX #9] Material Gallery moved to Properties Panel -->
+</div>
+
+<!-- Instructions -->
+<div class="instructions" id="instructions">
+    <h3>📋 Controls</h3>
+    <ul>
+        <li><strong>WASD/Arrows:</strong> Move camera</li>
+        <li><strong>Mouse Drag:</strong> Rotate camera</li>
+        <li><strong>Tab:</strong> Toggle Edit/View Mode</li>
+        <li><strong>Hover:</strong> Objects highlight</li>
+        <li><strong>Click:</strong> Select object</li>
+        <li><strong>Drag:</strong> Move objects</li>
+        <li><strong>Ctrl+Click:</strong> Multi-select</li>
+        <li><strong>Right-click:</strong> Context menu</li>
+    </ul>
+    <p style="margin-top: 10px; font-size: 11px; color: #999; line-height: 1.4;">
+        <strong>Edit Mode:</strong> Full control panel visible<br>
+        <strong>View Mode:</strong> Clean viewing experience
+    </p>
+</div>
+
+<!-- Toggle button -->
+<button class="toggle-instructions" id="toggleBtn" onclick="toggleInstructions()">ℹ️</button>

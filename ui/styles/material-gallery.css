@@ -1,0 +1,50 @@
+/**
+ * Material Gallery & Preview Grid Styles
+ * Extracted from phase3-full-demo.html
+ */
+
+/* Material Preview Grid */
+.material-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.material-grid button {
+    padding: 8px;
+    font-size: 11px;
+}
+
+/* [FIX #9] Material Grid in Properties Panel - compact style */
+.properties-material-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.properties-material-grid button {
+    padding: 6px 4px;
+    font-size: 10px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.properties-material-grid button:hover {
+    background: linear-gradient(135deg, #66BB6A, #5cb85c);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.properties-material-grid button:active {
+    transform: translateY(0);
+}
+

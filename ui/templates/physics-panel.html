@@ -1,0 +1,126 @@
+<!--
+  Physics Panel Template
+  Real-time physics controls for Havok integration
+  Created: 2025-11-25
+-->
+<div class="control-panel physics-panel" id="physicsPanel">
+    <h2>⚛️ Physics System</h2>
+
+    <!-- [HINT] Physics Info -->
+    <div class="control-group" style="background: rgba(156, 39, 176, 0.1); padding: 12px; border-radius: 6px; border-left: 3px solid #9C27B0;">
+        <p style="margin: 0; font-size: 12px; color: #BA68C8; line-height: 1.6;">
+            ⚡ <strong>Havok Physics:</strong> Production-level physics simulation with collision detection and gravity.
+        </p>
+    </div>
+
+    <!-- [PHY.1] Physics Toggle -->
+    <h3>🎛️ Physics Engine</h3>
+    <div class="control-group">
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="physicsEnabled" checked data-action="physics:toggle:enabled"
+                   style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+            <span style="color: #BA68C8;">⚛️ Enable Physics Simulation</span>
+        </label>
+    </div>
+
+    <!-- [PHY.2] Gravity Presets -->
+    <h3>🌍 Gravity Presets</h3>
+    <div class="control-group">
+        <label>World Gravity</label>
+        <div class="material-grid">
+            <button data-action="physics:gravity:preset" data-value="earth" class="active">🌍 Earth</button>
+            <button data-action="physics:gravity:preset" data-value="moon">🌙 Moon</button>
+            <button data-action="physics:gravity:preset" data-value="mars">🔴 Mars</button>
+            <button data-action="physics:gravity:preset" data-value="jupiter">🪐 Jupiter</button>
+            <button data-action="physics:gravity:preset" data-value="zeroG">🚀 Zero-G</button>
+            <button data-action="physics:gravity:preset" data-value="arcade">🎮 Arcade</button>
+            <button data-action="physics:gravity:preset" data-value="custom">⚙️ Custom</button>
+        </div>
+    </div>
+
+    <!-- [PHY.2.1] Custom Gravity Controls -->
+    <div id="customGravityControls" style="display: none;">
+        <div class="control-group">
+            <div class="property-control">
+                <span class="property-axis-label">Y-Axis Gravity</span>
+                <div class="property-spinner">
+                    <div class="spinner-buttons-top">
+                        <button class="spinner-btn" data-action="physics:gravity:y:increase" data-step="1">▴</button>
+                        <button class="spinner-btn" data-action="physics:gravity:y:increase" data-step="0.1">▴</button>
+                    </div>
+                    <input type="number" class="property-value" id="gravityYValue" step="0.1" value="-9.81">
+                    <div class="spinner-buttons-bottom">
+                        <button class="spinner-btn" data-action="physics:gravity:y:decrease" data-step="1">▾</button>
+                        <button class="spinner-btn" data-action="physics:gravity:y:decrease" data-step="0.1">▾</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- [PHY.3] Collision Mode -->
+    <h3>🛡️ Collision System</h3>
+    <div class="control-group">
+        <label>Collision Mode</label>
+        <select id="collisionMode" data-action="physics:collision:mode"
+                style="width: 100%; padding: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer;">
+            <option value="hybrid">⚡ Hybrid (Recommended)</option>
+            <option value="physics">🎯 Physics Only</option>
+            <option value="babylon">🔷 Babylon Only</option>
+        </select>
+        <p style="margin: 8px 0 0 0; font-size: 10px; color: #999; line-height: 1.3;">
+            Hybrid: Combines Babylon collision + Havok physics for best results.
+        </p>
+    </div>
+
+    <!-- [PHY.4] Camera Physics -->
+    <h3>📷 Camera Physics</h3>
+    <div class="control-group">
+        <label style="display: flex; align-items: center; cursor: pointer; margin-bottom: 8px;">
+            <input type="checkbox" id="cameraCollision" checked data-action="physics:camera:collision"
+                   style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+            <span>🛡️ Camera Collision</span>
+        </label>
+
+        <label style="display: flex; align-items: center; cursor: pointer; margin-bottom: 8px;">
+            <input type="checkbox" id="cameraGravity" data-action="physics:camera:gravity"
+                   style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+            <span>⬇️ Camera Gravity (Falling)</span>
+        </label>
+
+        <div style="margin-top: 10px;">
+            <div class="slider-container">
+                <div class="slider-label">
+                    <label>Camera Height</label>
+                    <span class="value-display" id="cameraHeightValue">1.0m</span>
+                </div>
+                <input type="range" id="cameraHeight" min="0.5" max="3" step="0.1" value="1.0"
+                       data-action="physics:camera:height" data-value="1.0">
+            </div>
+        </div>
+    </div>
+
+    <!-- [PHY.5] Debug Visualization -->
+    <h3>🔍 Debug Visualization</h3>
+    <div class="control-group">
+        <label style="display: flex; align-items: center; cursor: pointer; margin-bottom: 8px;">
+            <input type="checkbox" id="debugColliders" data-action="physics:debug:colliders"
+                   style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+            <span>📦 Show Collision Shapes</span>
+        </label>
+
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="debugForces" data-action="physics:debug:forces"
+                   style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+            <span>➡️ Show Force Vectors</span>
+        </label>
+    </div>
+
+    <!-- [PHY.6] Panel Collapse Button -->
+    <div style="text-align: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <button data-action="physics:panel:collapse"
+                style="padding: 6px 16px; background: rgba(156, 39, 176, 0.2); border: 1px solid rgba(186, 104, 200, 0.4); color: #BA68C8; border-radius: 4px; cursor: pointer;">
+            − Collapse Panel
+        </button>
+    </div>
+</div>

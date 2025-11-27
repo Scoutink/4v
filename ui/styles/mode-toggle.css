@@ -1,0 +1,36 @@
+/**
+ * Edit/View Mode Toggle Styles
+ * Extracted from phase3-full-demo.html
+ */
+
+/* [UI.MODE] Edit/View Mode Toggle */
+.mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.mode-toggle button {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.mode-toggle button:hover {
+    background: linear-gradient(135deg, #45a049, #4CAF50);
+    transform: scale(1.05);
+}
+

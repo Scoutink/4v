@@ -1,0 +1,63 @@
+/**
+ * Instructions Panel & Toggle Button Styles  
+ * Extracted from phase3-full-demo.html
+ */
+
+/* Instructions panel (top-left) */
+.instructions {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 280px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    z-index: 1000;
+}
+
+.instructions h3 {
+    color: #4CAF50;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.instructions ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.instructions li {
+    font-size: 12px;
+    padding: 4px 0;
+    line-height: 1.4;
+}
+
+.instructions strong {
+    color: #81C784;
+}
+
+/* Toggle button for instructions */
+.toggle-instructions {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(76, 175, 80, 0.9);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 999;
+    display: none;
+}
+
+.toggle-instructions.visible {
+    display: block;
+}
+

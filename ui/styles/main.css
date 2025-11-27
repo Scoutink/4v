@@ -1,0 +1,30 @@
+/**
+ * Legozo 3D CMS - Main Stylesheet
+ *
+ * This file imports all CSS modules.
+ * For production, use build tools to combine and minify.
+ *
+ * Original monolithic file: 570 lines
+ * Modular structure: 7 files, easier to maintain
+ */
+
+/* Base styles - Reset, body, canvas */
+@import url('./base.css');
+
+/* Loading screen and welcome message */
+@import url('./loading.css');
+
+/* Instructions panel and toggle */
+@import url('./instructions.css');
+
+/* Edit/View mode toggle button */
+@import url('./mode-toggle.css');
+
+/* Control panel (ground, camera, lighting controls) */
+@import url('./control-panel.css');
+
+/* Material gallery and preview grid */
+@import url('./material-gallery.css');
+
+/* Properties panel and general panels */
+@import url('./panels.css');

@@ -1,0 +1,71 @@
+{
+  "rotationPresets": {
+    "horizontal": {
+      "name": "Horizontal (Flat)",
+      "description": "Standard flat ground",
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "vertical": {
+      "name": "Vertical (Wall)",
+      "description": "Ground rotated 90° to become a vertical wall",
+      "rotation": {
+        "x": 1.5708,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "diagonal45": {
+      "name": "Diagonal 45°",
+      "description": "Ground tilted at 45° angle",
+      "rotation": {
+        "x": 0.7854,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "tiltBack": {
+      "name": "Tilt Back 30°",
+      "description": "Ground tilted back 30°",
+      "rotation": {
+        "x": 0.5236,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "tiltForward": {
+      "name": "Tilt Forward 30°",
+      "description": "Ground tilted forward 30°",
+      "rotation": {
+        "x": -0.5236,
+        "y": 0,
+        "z": 0
+      }
+    }
+  },
+  "edgeBehaviors": {
+    "stop": {
+      "name": "Stop at Edge",
+      "description": "Camera stops when reaching ground edge",
+      "icon": "🛑"
+    },
+    "teleport": {
+      "name": "Teleport to Start",
+      "description": "Camera teleports back to start position when reaching edge",
+      "icon": "↩️"
+    },
+    "wrap": {
+      "name": "Wrap Around",
+      "description": "Camera wraps to opposite edge (Pac-Man style)",
+      "icon": "🔄"
+    },
+    "none": {
+      "name": "No Restriction",
+      "description": "Camera can move beyond ground boundaries",
+      "icon": "🚀"
+    }
+  }
+}
